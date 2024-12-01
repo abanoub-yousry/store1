@@ -330,47 +330,48 @@ function updateTotal() {
   totalElement.innerHTML = `$${total}`;
 }
 /////////////////////////////////
-// تعديل إرسال WhatsApp
-// تعديل إرسال WhatsApp
-// Send WhatsApp message
 function sendWhatsApp() {
   let products = [];
   let storedProductIDs = localStorage.getItem("productIDs");
 
   if (storedProductIDs) {
     let productIDs = storedProductIDs.split(",");
-    
-    // Use Promise.all to wait for all fetch calls to complete
-    const fetchProducts = productIDs.map(id => {
-      return fetch(`https://json-server-brown-five.vercel.app/products?id=${id}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data[0] && data[0].img) {
-            const imageUrl = `https://yourwebsite.com/${data[0].img}`;  // Replace with your actual website URL
+    productIDs.forEach(async (id) => {
+      try {
+        // جلب بيانات المنتج مباشرة من الصفحة
+        let productElement = document.querySelector(`#product-${id}`); // افترض أن كل منتج له ID خاص به في الصفحة
+        if (productElement) {
+          let imageUrl = productElement.querySelector("img").src; // استخرج رابط الصورة من العنصر
+
+          if (imageUrl) {
+            console.log("Image URL:", imageUrl); // تحقق من الرابط
+
             products.push({
-              image: imageUrl
+              image: imageUrl // إضافة الرابط إلى المصفوفة
             });
           }
-        })
-        .catch(error => console.error("Error fetching product:", error));
+        }
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
     });
 
-    // Wait for all fetch calls to complete
-    Promise.all(fetchProducts).then(() => {
-      var websiteOwnerNumber = "201094146311"; // Website owner's phone number
-      var messageText = "HelloW,\n\n";
+    setTimeout(() => {
+      var websiteOwnerNumber = "201094146311"; // رقم صاحب الموقع
 
-      // Add product image URLs to the message text
+      var messageText = "Hello,\n\n";
+
+      // إضافة روابط الصور إلى الرسالة
       products.forEach(function (product) {
         var imageUrl = product.image;
-        messageText += `Product: ${imageUrl}\n\n`;  // Add image URL to the message
+        messageText += `Product: ${imageUrl}\n\n`;  // إضافة رابط الصورة
       });
 
       var whatsappLink = `https://wa.me/${websiteOwnerNumber}?text=${encodeURIComponent(messageText)}`;
 
-      // Open WhatsApp link
+      // فتح الرابط في نافذة جديدة
       window.open(whatsappLink, '_blank');
-    });
+    }, 500); // تأخير لضمان تحميل البيانات
   }
 }
 
