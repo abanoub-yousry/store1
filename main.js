@@ -86,7 +86,6 @@ function requestAndBuild(string) {
   });
 }
 
-
 requestAndBuild("");
 
 filter[0].addEventListener("click", function () {
@@ -268,6 +267,9 @@ async function addToCart(id) {
     );
     const data = await response.json();
 
+    // تخزين رابط الصورة في الـ localStorage
+    localStorage.setItem(`product-${data[0].id}-image`, data[0].img);
+
     cartContent.innerHTML += `<div id="cart-box" class="cart-box ${data[0].id}">
       <img id='cart-img' src="${data[0].img}" alt="">
       <div id="product-details">
@@ -295,61 +297,23 @@ async function addToCart(id) {
   }
 }
 
-function handle_removeProduct() {
-  let removedProduct = this.parentElement.classList[1];
-  this.parentElement.remove();
-  productIDs = productIDs.filter((element) => element != removedProduct);
-  localStorage.setItem("counter", productIDs.length);
-  localStorage.setItem("productIDs", productIDs);
-  countSpan.innerHTML = productIDs.length;
-  update();
-}
-
-function handle_changeProductQuantity() {
-  if (isNaN(this.value) || this.value <= 0) {
-    this.value = 1;
-  }
-  this.value = Math.floor(this.value);
-  update();
-}
-
-//update and render functions
-function updateTotal() {
-  let cartBoxes = document.getElementsByClassName("cart-box");
-  let cartArray = Array.from(cartBoxes);
-  let totalElement = document.getElementById("total-amount");
-  let total = 0;
-  cartArray.forEach((cartBox) => {
-    let priceElement = cartBox.getElementsByClassName("product-price")[0];
-    let price = parseFloat(priceElement.innerText.replace("$", ""));
-    let quantity = cartBox.getElementsByClassName("product-quantity")[0].value;
-    total = total + price * quantity;
-  });
-
-  total = total.toFixed(2);
-  totalElement.innerHTML = `$${total}`;
-}
-/////////////////////////////////
 function sendWhatsApp() {
   let products = [];
   let storedProductIDs = localStorage.getItem("productIDs");
 
   if (storedProductIDs) {
     let productIDs = storedProductIDs.split(",");
-    productIDs.forEach(async (id) => {
+    productIDs.forEach((id) => {
       try {
-        // جلب بيانات المنتج مباشرة من الصفحة
-        let productElement = document.querySelector(`#product-${id}`); // افترض أن كل منتج له ID خاص به في الصفحة
-        if (productElement) {
-          let imageUrl = productElement.querySelector("img").src; // استخرج رابط الصورة من العنصر
+        // استرجاع رابط الصورة من localStorage
+        let imageUrl = localStorage.getItem(`product-${id}-image`);
 
-          if (imageUrl) {
-            console.log("Image URL:", imageUrl); // تحقق من الرابط
+        if (imageUrl) {
+          console.log("Image URL:", imageUrl); // تحقق من الرابط
 
-            products.push({
-              image: imageUrl // إضافة الرابط إلى المصفوفة
-            });
-          }
+          products.push({
+            image: imageUrl // إضافة الرابط إلى المصفوفة
+          });
         }
       } catch (error) {
         console.error("Error fetching product:", error);
@@ -374,9 +338,3 @@ function sendWhatsApp() {
     }, 500); // تأخير لضمان تحميل البيانات
   }
 }
-
-
-
-
-
-
