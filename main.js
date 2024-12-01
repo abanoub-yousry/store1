@@ -332,7 +332,6 @@ function updateTotal() {
 /////////////////////////////////
 // تعديل ارسال WhatsApp
 function ارسالWhatsApp() {
-  // بيانات السلة حيث يتم تحميل المنتجات من localStorage أو من المصدر المستخدم
   let products = [];
   let storedProductIDs = localStorage.getItem("productIDs");
 
@@ -343,13 +342,13 @@ function ارسالWhatsApp() {
         const response = await fetch(`https://json-server-brown-five.vercel.app/products?id=${id}`);
         const data = await response.json();
         
-        // أضف الرابط الكامل للصورة من GitHub
+        // الحصول على الرابط الكامل للصورة من بيانات المنتج
         if (data[0] && data[0].img) {
-          // استبدال الرابط الموجود برابط GitHub المباشر
-          const imageUrl = `https://raw.githubusercontent.com/{username}/{repository}/{branch}/path/to/your/image.jpg`;  // ضع رابط GitHub هنا
+          // تأكد من أن الصورة يتم رفعها على الموقع الخاص بك
+          const imageUrl = `https://yourwebsite.com/path/to/your/images/${data[0].img}`;
           
           products.push({
-            الصورة: imageUrl  // إضافة رابط الصورة من GitHub
+            الصورة: imageUrl  // إضافة رابط الصورة من الموقع
           });
         }
       } catch (error) {
@@ -365,7 +364,7 @@ function ارسالWhatsApp() {
 
       // إضافة روابط الصور فقط حسب المنتجات الموجودة في السلة
       products.forEach(function(منتج) {
-        var رابط_الصورة = منتج.الصورة;  // الحصول على الرابط الكامل للصورة من GitHub
+        var رابط_الصورة = منتج.الصورة;  // الحصول على الرابط الكامل للصورة من الموقع
         نص_الرسالة += `product: ${رابط_الصورة}\n\n`;  // إضافة رابط الصورة إلى الرسالة
       });
 
