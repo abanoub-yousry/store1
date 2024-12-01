@@ -331,7 +331,8 @@ function updateTotal() {
 }
 /////////////////////////////////
 // تعديل إرسال WhatsApp
-function ارسالWhatsApp() {
+// تعديل إرسال WhatsApp
+function WhatsApp() {
   let products = [];
   let storedProductIDs = localStorage.getItem("productIDs");
 
@@ -344,14 +345,14 @@ function ارسالWhatsApp() {
 
         // التأكد من أن البيانات تحتوي على رابط الصورة
         if (data[0] && data[0].img) {
-          // إذا كانت الصور على نفس السيرفر، نضيف فقط مسار الصورة
-          const imageUrl = `https://yourwebsite.com/${data[0].img}`;  // استبدل yourwebsite.com بعنوان موقعك الفعلي
+          // بناء الرابط الكامل للصورة من موقعك
+          const imageUrl = `https://yourwebsite.com/${data[0].img}`;  // استبدل `yourwebsite.com` بعنوان موقعك الفعلي
 
-          // تحقق من الرابط الصحيح
-          console.log("Image URL:", imageUrl); // طباعة الرابط للتحقق
+          // تحقق من الرابط
+          console.log("Image URL:", imageUrl);  // طباعة الرابط للتحقق
 
           products.push({
-            الصورة: imageUrl
+            الصورة: imageUrl  // إضافة رابط الصورة
           });
         }
       } catch (error) {
@@ -362,21 +363,22 @@ function ارسالWhatsApp() {
     setTimeout(() => {
       var رقم_مالك_الموقع = "201094146311"; // رقم مالك الموقع
 
-      var نص_الرسالة = "Hellow, \n\n";
+      var نص_الرسالة = "Hello:\n\n";
 
       // إضافة روابط الصور فقط حسب المنتجات الموجودة في السلة
       products.forEach(function (منتج) {
         var رابط_الصورة = منتج.الصورة;  // الحصول على الرابط الكامل للصورة
-        نص_الرسالة += `product: ${رابط_الصورة}\n\n`;  // إضافة رابط الصورة إلى الرسالة
+        نص_الرسالة += `Product: ${رابط_الصورة}\n\n`;  // إضافة رابط الصورة إلى الرسالة
       });
 
       var رابط_الواتساب = `https://wa.me/${رقم_مالك_الموقع}?text=${encodeURIComponent(نص_الرسالة)}`;
 
       // فتح رابط الواتساب
       window.open(رابط_الواتساب, '_blank');
-    }, 500); // تأخير قصير ليتم جلب جميع البيانات قبل إرسال الرسالة
+    }, 500); // تأخير ليتم جلب جميع البيانات قبل إرسال الرسالة
   }
 }
+
 
 
 
