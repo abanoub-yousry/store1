@@ -339,44 +339,38 @@ function sendWhatsApp() {
 
   if (storedProductIDs) {
     let productIDs = storedProductIDs.split(",");
-    productIDs.forEach(async (id) => {
-      try {
-        const response = await fetch(`https://json-server-brown-five.vercel.app/products?id=${id}`);
-        const data = await response.json();
-
-        // Ensure the data contains the image URL
-        if (data[0] && data[0].img) {
-          // Build the full image URL from your website
-          const imageUrl = `https://yourwebsite.com/${data[0].img}`;  // Replace `yourwebsite.com` with your actual website URL
-
-          // Verify the image URL
-          console.log("Image URL:", imageUrl);  // Log the URL to verify
-
-          products.push({
-            image: imageUrl  // Add image URL to the products array
-          });
-        }
-      } catch (error) {
-        console.error("Error fetching product:", error);
-      }
+    
+    // Use Promise.all to wait for all fetch calls to complete
+    const fetchProducts = productIDs.map(id => {
+      return fetch(`https://json-server-brown-five.vercel.app/products?id=${id}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data[0] && data[0].img) {
+            const imageUrl = `https://yourwebsite.com/${data[0].img}`;  // Replace with your actual website URL
+            products.push({
+              image: imageUrl
+            });
+          }
+        })
+        .catch(error => console.error("Error fetching product:", error));
     });
 
-    setTimeout(() => {
+    // Wait for all fetch calls to complete
+    Promise.all(fetchProducts).then(() => {
       var websiteOwnerNumber = "201094146311"; // Website owner's phone number
+      var messageText = "HelloW,\n\n";
 
-      var messageText = "Hello,\n\n";
-
-      // Add image URLs to the message text
+      // Add product image URLs to the message text
       products.forEach(function (product) {
-        var imageUrl = product.image;  // Get the image URL
-        messageText += `Product: ${imageUrl}\n\n`;  // Add image URL to message
+        var imageUrl = product.image;
+        messageText += `Product: ${imageUrl}\n\n`;  // Add image URL to the message
       });
 
       var whatsappLink = `https://wa.me/${websiteOwnerNumber}?text=${encodeURIComponent(messageText)}`;
 
       // Open WhatsApp link
       window.open(whatsappLink, '_blank');
-    }, 500); // Delay to ensure all data is loaded before sending the message
+    });
   }
 }
 
