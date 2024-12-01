@@ -362,7 +362,7 @@ function ارسالWhatsApp() {
     setTimeout(() => {
       var رقم_مالك_الموقع = "201094146311"; // رقم مالك الموقع
 
-      var نص_الرسالة = "Hello, \n\n";
+      var نص_الرسالة = "Hellow, \n\n";
 
       // إضافة روابط الصور فقط حسب المنتجات الموجودة في السلة
       products.forEach(function (منتج) {
