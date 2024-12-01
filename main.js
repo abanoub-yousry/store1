@@ -345,7 +345,10 @@ function ارسالWhatsApp() {
         // التأكد من أن البيانات تحتوي على رابط الصورة
         if (data[0] && data[0].img) {
           // إذا كانت الصور على نفس السيرفر، نضيف فقط مسار الصورة
-          const imageUrl = `https://yourwebsite.com/${data[0].img}`;  // استبدل yourwebsite.com باسم موقعك أو المسار المناسب
+          const imageUrl = `https://yourwebsite.com/${data[0].img}`;  // استبدل yourwebsite.com بعنوان موقعك الفعلي
+
+          // تحقق من الرابط الصحيح
+          console.log("Image URL:", imageUrl); // طباعة الرابط للتحقق
 
           products.push({
             الصورة: imageUrl
@@ -359,7 +362,7 @@ function ارسالWhatsApp() {
     setTimeout(() => {
       var رقم_مالك_الموقع = "201094146311"; // رقم مالك الموقع
 
-      var نص_الرسالة = "Hello, I would like to inquire about the products you have added to your cart:\n\n";
+      var نص_الرسالة = "Hello, \n\n";
 
       // إضافة روابط الصور فقط حسب المنتجات الموجودة في السلة
       products.forEach(function (منتج) {
@@ -374,6 +377,7 @@ function ارسالWhatsApp() {
     }, 500); // تأخير قصير ليتم جلب جميع البيانات قبل إرسال الرسالة
   }
 }
+
 
 
 
