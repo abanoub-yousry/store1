@@ -46,7 +46,7 @@ if (close) {
   });
 }
 document.getElementById("share-button").addEventListener("click", function() {
-  var pageUrl = window.location.pathname; // جلب رابط الصفحة الحالية
+  var pageUrl = window.location.href; // جلب رابط الصفحة الحالية
   var phoneNumber = "201094146311";  // الرقم الذي تريد إرسال الرابط إليه
   var message = `Hi! Check out this page: ${pageUrl}`; // الرسالة المرسلة
   var whatsappURL = `https://api.whatsapp.com/send/?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
