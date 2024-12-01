@@ -330,48 +330,50 @@ function updateTotal() {
   totalElement.innerHTML = `$${total}`;
 }
 /////////////////////////////////
+// تعديل ارسال WhatsApp
 function ارسالWhatsApp() {
   // بيانات السلة حيث يتم تحميل المنتجات من localStorage أو من المصدر المستخدم
   let products = [];
   let storedProductIDs = localStorage.getItem("productIDs");
 
   if (storedProductIDs) {
-      let productIDs = storedProductIDs.split(",");
-      productIDs.forEach(async (id) => {
-          try {
-              const response = await fetch(`https://json-server-brown-five.vercel.app/products?id=${id}`);
-              const data = await response.json();
-              // أضف الرابط الكامل للصورة
-              if (data[0] && data[0].img) {
-                  products.push({
-                      الصورة: data[0].img  // الحصول على رابط الصورة من البيانات
-                  });
-              }
-          } catch (error) {
-              console.error("Error fetching product:", error);
-          }
+    let productIDs = storedProductIDs.split(",");
+    productIDs.forEach(async (id) => {
+      try {
+        const response = await fetch(`https://json-server-brown-five.vercel.app/products?id=${id}`);
+        const data = await response.json();
+        
+        // أضف الرابط الكامل للصورة من GitHub
+        if (data[0] && data[0].img) {
+          // استبدال الرابط الموجود برابط GitHub المباشر
+          const imageUrl = `https://raw.githubusercontent.com/{username}/{repository}/{branch}/path/to/your/image.jpg`;  // ضع رابط GitHub هنا
+          
+          products.push({
+            الصورة: imageUrl  // إضافة رابط الصورة من GitHub
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching product:", error);
+      }
+    });
+
+    // بعد الحصول على بيانات السلة، نرسل الرسالة
+    setTimeout(() => {
+      var رقم_مالك_الموقع = "201094146311"; // رقم مالك الموقع
+
+      var نص_الرسالة = "Hello, I would like to inquire about the products you have added to your cart:\n\n";
+
+      // إضافة روابط الصور فقط حسب المنتجات الموجودة في السلة
+      products.forEach(function(منتج) {
+        var رابط_الصورة = منتج.الصورة;  // الحصول على الرابط الكامل للصورة من GitHub
+        نص_الرسالة += `product: ${رابط_الصورة}\n\n`;  // إضافة رابط الصورة إلى الرسالة
       });
 
-      // بعد الحصول على بيانات السلة، نرسل الرسالة
-      setTimeout(() => {
-          // رقم مالك الموقع
-          var رقم_مالك_الموقع = "201094146311";
+      var رابط_الواتساب = `https://wa.me/${رقم_مالك_الموقع}?text=${encodeURIComponent(نص_الرسالة)}`;
 
-          // إعداد الرسالة المبدئية
-          var نص_الرسالة = "Hello, I would like to inquire about the products you have added to your cart:\n\n";
-
-          // إضافة روابط الصور فقط حسب المنتجات الموجودة في السلة
-          products.forEach(function(منتج) {
-              var رابط_الصورة = window.location.origin + منتج.الصورة;  // الحصول على الرابط الكامل للصورة
-              نص_الرسالة += `product: ${رابط_الصورة}\n\n`;  // إضافة رابط الصورة إلى الرسالة
-          });
-
-          // إنشاء رابط واتساب
-          var رابط_الواتساب = `https://wa.me/${رقم_مالك_الموقع}?text=${encodeURIComponent(نص_الرسالة)}`;
-
-          // فتح رابط الواتساب
-          window.open(رابط_الواتساب, '_blank');
-      }, 500); // تأخير قصير ليتم جلب جميع البيانات قبل إرسال الرسالة
+      // فتح رابط الواتساب
+      window.open(رابط_الواتساب, '_blank');
+    }, 500); // تأخير قصير ليتم جلب جميع البيانات قبل إرسال الرسالة
   }
 }
 
