@@ -330,9 +330,8 @@ function updateTotal() {
   totalElement.innerHTML = `$${total}`;
 }
 /////////////////////////////////
-// تعديل ارسال WhatsApp
+// تعديل إرسال WhatsApp
 function ارسالWhatsApp() {
-  // بيانات السلة حيث يتم تحميل المنتجات من localStorage أو من المصدر المستخدم
   let products = [];
   let storedProductIDs = localStorage.getItem("productIDs");
 
@@ -342,14 +341,14 @@ function ارسالWhatsApp() {
       try {
         const response = await fetch(`https://json-server-brown-five.vercel.app/products?id=${id}`);
         const data = await response.json();
-        
+
         // التأكد من أن البيانات تحتوي على رابط الصورة
         if (data[0] && data[0].img) {
-          // بناء الرابط الكامل للصورة من الموقع الخاص بك
-          const imageUrl = `${window.location.origin}/${data[0].img}`;  // الحصول على الرابط الكامل للصورة باستخدام window.location.origin
+          // إذا كانت الصور على نفس السيرفر، نضيف فقط مسار الصورة
+          const imageUrl = `https://yourwebsite.com/${data[0].img}`;  // استبدل yourwebsite.com باسم موقعك أو المسار المناسب
 
           products.push({
-            الصورة: imageUrl  // إضافة رابط الصورة
+            الصورة: imageUrl
           });
         }
       } catch (error) {
@@ -357,14 +356,13 @@ function ارسالWhatsApp() {
       }
     });
 
-    // بعد الحصول على بيانات السلة، نرسل الرسالة
     setTimeout(() => {
       var رقم_مالك_الموقع = "201094146311"; // رقم مالك الموقع
 
       var نص_الرسالة = "Hello, I would like to inquire about the products you have added to your cart:\n\n";
 
       // إضافة روابط الصور فقط حسب المنتجات الموجودة في السلة
-      products.forEach(function(منتج) {
+      products.forEach(function (منتج) {
         var رابط_الصورة = منتج.الصورة;  // الحصول على الرابط الكامل للصورة
         نص_الرسالة += `product: ${رابط_الصورة}\n\n`;  // إضافة رابط الصورة إلى الرسالة
       });
@@ -376,6 +374,7 @@ function ارسالWhatsApp() {
     }, 500); // تأخير قصير ليتم جلب جميع البيانات قبل إرسال الرسالة
   }
 }
+
 
 
 
