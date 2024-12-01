@@ -332,7 +332,8 @@ function updateTotal() {
 /////////////////////////////////
 // تعديل إرسال WhatsApp
 // تعديل إرسال WhatsApp
-function WhatsApp() {
+// Send WhatsApp message
+function sendWhatsApp() {
   let products = [];
   let storedProductIDs = localStorage.getItem("productIDs");
 
@@ -343,16 +344,16 @@ function WhatsApp() {
         const response = await fetch(`https://json-server-brown-five.vercel.app/products?id=${id}`);
         const data = await response.json();
 
-        // التأكد من أن البيانات تحتوي على رابط الصورة
+        // Ensure the data contains the image URL
         if (data[0] && data[0].img) {
-          // بناء الرابط الكامل للصورة من موقعك
-          const imageUrl = `https://yourwebsite.com/${data[0].img}`;  // استبدل `yourwebsite.com` بعنوان موقعك الفعلي
+          // Build the full image URL from your website
+          const imageUrl = `https://yourwebsite.com/${data[0].img}`;  // Replace `yourwebsite.com` with your actual website URL
 
-          // تحقق من الرابط
-          console.log("Image URL:", imageUrl);  // طباعة الرابط للتحقق
+          // Verify the image URL
+          console.log("Image URL:", imageUrl);  // Log the URL to verify
 
           products.push({
-            الصورة: imageUrl  // إضافة رابط الصورة
+            image: imageUrl  // Add image URL to the products array
           });
         }
       } catch (error) {
@@ -361,21 +362,21 @@ function WhatsApp() {
     });
 
     setTimeout(() => {
-      var رقم_مالك_الموقع = "201094146311"; // رقم مالك الموقع
+      var websiteOwnerNumber = "201094146311"; // Website owner's phone number
 
-      var نص_الرسالة = "Hello:\n\n";
+      var messageText = "Hello,\n\n";
 
-      // إضافة روابط الصور فقط حسب المنتجات الموجودة في السلة
-      products.forEach(function (منتج) {
-        var رابط_الصورة = منتج.الصورة;  // الحصول على الرابط الكامل للصورة
-        نص_الرسالة += `Product: ${رابط_الصورة}\n\n`;  // إضافة رابط الصورة إلى الرسالة
+      // Add image URLs to the message text
+      products.forEach(function (product) {
+        var imageUrl = product.image;  // Get the image URL
+        messageText += `Product: ${imageUrl}\n\n`;  // Add image URL to message
       });
 
-      var رابط_الواتساب = `https://wa.me/${رقم_مالك_الموقع}?text=${encodeURIComponent(نص_الرسالة)}`;
+      var whatsappLink = `https://wa.me/${websiteOwnerNumber}?text=${encodeURIComponent(messageText)}`;
 
-      // فتح رابط الواتساب
-      window.open(رابط_الواتساب, '_blank');
-    }, 500); // تأخير ليتم جلب جميع البيانات قبل إرسال الرسالة
+      // Open WhatsApp link
+      window.open(whatsappLink, '_blank');
+    }, 500); // Delay to ensure all data is loaded before sending the message
   }
 }
 
